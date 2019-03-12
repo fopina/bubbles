@@ -45,6 +45,7 @@ deploy:
     draft: true
     on:
       tags: false
+      branch: dev
   - provider: releases
     api_key: "${GITHUB_TOKEN}"
     file: "${BINARY}"
