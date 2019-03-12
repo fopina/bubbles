@@ -1,0 +1,53 @@
+language: go
+
+go:
+- 1.12
+
+matrix:
+  include:
+    - os: linux
+      dist: xenial
+      before_install:
+        - sudo apt update
+        - sudo apt-get install libasound2-dev libxcursor-dev libxinerama-dev libxi-dev libxrandr-dev libxxf86vm-dev
+      env:
+        - BINARY: "bubbles_linux_amd64"
+    - os: osx
+      osx_image: xcode10.1
+      env:
+        - BINARY: "bubbles_darwin_amd64"
+    - os: linux
+      dist: xenial
+      env:
+        - BINARY: "bubbles_win32.exe"
+        - CC: x86_64-w64-mingw32-gcc
+      before_install:
+        - sudo apt update
+        - sudo apt-get install mingw-w64
+      before_script:
+        # gvm update runs after env section
+        # hack for getting windows GOOS...
+        - export GOOS=windows
+        # why does it get reset to 0...?
+        - export CGO_ENABLED=1
+
+install:
+  - make deps
+
+script:
+  - make bubbles
+
+deploy:
+  - provider: releases
+    api_key: "${GITHUB_TOKEN}"
+    file: "${BINARY}"
+    skip_cleanup: true
+    draft: true
+    on:
+      tags: false
+  - provider: releases
+    api_key: "${GITHUB_TOKEN}"
+    file: "${BINARY}"
+    skip_cleanup: true
+    on:
+      tags: true
