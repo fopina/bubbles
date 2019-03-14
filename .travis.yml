@@ -16,7 +16,7 @@ matrix:
       osx_image: xcode10.1
       env:
         - BINARY: "bubbles_darwin_amd64"
-    - os: linux
+    - os: linux  # windows build
       dist: xenial
       env:
         - BINARY: "bubbles_win32.exe"
@@ -30,6 +30,26 @@ matrix:
         - export GOOS=windows
         # why does it get reset to 0...?
         - export CGO_ENABLED=1
+    - os: linux  # rpi build
+      dist: xenial
+      language: minimal
+      env:
+        - BINARY: "bubbles_linux_arm"
+      install:  # completely replace install
+        - curl -LO https://github.com/multiarch/qemu-user-static/releases/download/v3.1.0-2/qemu-arm-static
+        - chmod a+x qemu-arm-static
+        - echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
+        - sudo service docker restart
+        - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+      script:  # completely replace script
+        - |
+          docker run -iv $(pwd)/qemu-arm-static:/usr/bin/qemu-arm-static \
+                     -v$(pwd):/go/src/github.com/fopina/bubbles \
+                     -w /go/src/github.com/fopina/bubbles \
+                     -e BINARY \
+                     fopina/misc:bubbles-arm-builder <<EOF
+          make deps slim
+          EOF
 
 install:
   - make deps
