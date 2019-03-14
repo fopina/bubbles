@@ -58,14 +58,14 @@ script:
   - make bubbles
 
 deploy:
-  - provider: releases
-    api_key: "${GITHUB_TOKEN}"
-    file: "${BINARY}"
-    skip_cleanup: true
-    draft: true
-    on:
-      tags: false
-      branch: dev
+  #- provider: releases
+  #  api_key: "${GITHUB_TOKEN}"
+  #  file: "${BINARY}"
+  #  skip_cleanup: true
+  #  draft: true
+  #  on:
+  #    tags: false
+  #    branch: dev
   - provider: releases
     api_key: "${GITHUB_TOKEN}"
     file: "${BINARY}"
