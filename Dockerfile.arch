@@ -8,4 +8,6 @@ RUN useradd temp
 RUN curl -L https://aur.archlinux.org/cgit/aur.git/snapshot/libiconv.tar.gz -o /libiconv.tgz && \
 	tar xf libiconv.tgz && rm libiconv.tgz && \
 	chown -R temp /libiconv && \
-	su temp -c "cd /libiconv; makepkg -A"
+	su temp -c "cd /libiconv; makepkg -A" && \
+	pacman -U --noconfirm /libiconv/libiconv-1.15-1-armv7h.pkg.tar.xz && \
+	rm -fr /libiconv
