@@ -1,6 +1,6 @@
 go-sdl version of https://codepen.io/MarioD/pen/gWregQ
 
-![Alt Text](https://media.giphy.com/media/7T8Lqtz2K3p7JXOSsQ/giphy.gif)
+![Alt Text](https://media.giphy.com/media/QubUhNTqXf3Q07kJSZ/giphy.gif)
 
 ### References
 
