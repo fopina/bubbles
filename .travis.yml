@@ -18,13 +18,14 @@ matrix:
         - BINARY: "bubbles_darwin_amd64"
     - os: linux  # windows build
       dist: xenial
-      env:
-        - BINARY: "bubbles_win32.exe"
-        - CC: x86_64-w64-mingw32-gcc
       before_install:
         - sudo apt update
         - sudo apt-get install mingw-w64
       before_script:
+        # export these 2 only here instead of env
+        # because of go:generate quirks
+        - export BINARY=bubbles_win32.exe
+        - export CC=x86_64-w64-mingw32-gcc
         # gvm update runs after env section
         # hack for getting windows GOOS...
         - export GOOS=windows

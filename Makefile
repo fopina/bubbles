@@ -2,7 +2,11 @@ BINARY?=bubbles
 
 all: deps bubbles
 
-deps:
+generate:
+	go get github.com/shurcooL/vfsgen
+	go generate
+
+deps: generate
 	go get -d
 
 bubbles:

@@ -10,4 +10,6 @@ const (
 	// same as Radius
 	MaxWaveDistanceDelta = 40
 	PopLines = 6
+	CursorHeight = 20
+	CursorWidth = 10
 )

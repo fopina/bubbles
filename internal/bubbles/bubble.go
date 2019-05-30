@@ -6,6 +6,7 @@ import (
 	
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/gfx"
+	"github.com/veandco/go-sdl2/mix"
 )
 
 type MousePos struct {
@@ -59,35 +60,33 @@ func (b *Bubble) Reset() {
 }
 
 func (b *Bubble) Render(renderer *sdl.Renderer) {
-	sdl.Do(func() {
-		if b.Popping {
-			for _, l := range b.Lines {
-				if float64(l.LineLength) < l.MaxPopDistance && !l.InversePop {
-            		l.PopDistance += 0.06
-	          	} else {
-	            	if(l.PopDistance >= 0) {
-	              		l.InversePop = true
-	              		l.PopDistanceReturn += BubbleSpeed
-	              		l.PopDistance -= 0.03
-	            	} else {
-	            		b.Reset()
-	            	}
-	            }
-	            l.Render(renderer)
-	        }
-		} else {
-			gfx.CircleColor(renderer, b.X, b.Y, b.Radius, b.Color)
-			gfx.ArcColor(
-				renderer, b.X, b.Y, b.Radius - 3,
-				b.Rotation - MaxRotation,
-				b.Rotation - MaxRotation + 90,
-				b.Color,
-			)
-		}
-	})
+	if b.Popping {
+		for _, l := range b.Lines {
+			if float64(l.LineLength) < l.MaxPopDistance && !l.InversePop {
+        		l.PopDistance += 0.06
+          	} else {
+            	if(l.PopDistance >= 0) {
+              		l.InversePop = true
+              		l.PopDistanceReturn += BubbleSpeed
+              		l.PopDistance -= 0.03
+            	} else {
+            		b.Reset()
+            	}
+            }
+            l.Render(renderer)
+        }
+	} else {
+		gfx.CircleColor(renderer, b.X, b.Y, b.Radius, b.Color)
+		gfx.ArcColor(
+			renderer, b.X, b.Y, b.Radius - 3,
+			b.Rotation - MaxRotation,
+			b.Rotation - MaxRotation + 90,
+			b.Color,
+		)
+	}
 }
 
-func (b *Bubble) Update(mouse *MousePos) {
+func (b *Bubble) Update(mouse *MousePos, chunks[] *mix.Chunk) {
 	b.X = int32(math.Sin(float64(b.Count) / b.DistanceBetweenWaves) * 50) + b.XOff;
 	b.Y = b.Count
 	if b.Count < -b.Radius {
@@ -100,8 +99,11 @@ func (b *Bubble) Update(mouse *MousePos) {
 		b.RotationStep *= -1
 	}
 
-	if mouse.X >= b.X - b.Radius && mouse.X <= b.X + b.Radius {
-		if mouse.Y >= b.Y - b.Radius && mouse.Y <= b.Y + b.Radius {
+	if mouse.X + CursorWidth >= b.X - b.Radius && mouse.X <= b.X + b.Radius {
+		if mouse.Y + CursorHeight >= b.Y - b.Radius && mouse.Y <= b.Y + b.Radius {
+			if !b.Popping {
+				chunks[rand.Intn(len(chunks))].Play(1, 0)
+			}
 			b.Popping = true
 		}
 	}
