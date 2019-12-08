@@ -2,6 +2,7 @@ package bubbles
 
 import (
 	"math"
+
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -14,7 +15,7 @@ type Line struct {
 	PopDistance,
 	MaxPopDistance float64
 	InversePop bool
-	Bubble *Bubble
+	Bubble     *Bubble
 }
 
 func NewLine(bubble *Bubble, index int32) *Line {
@@ -34,8 +35,8 @@ func (l *Line) Reset() {
 }
 
 func (l *Line) Update() {
-	l.X = int32(float64(l.Bubble.X) + (float64(l.Bubble.Radius) + l.PopDistanceReturn) * math.Cos(2.0 * math.Pi * float64(l.Index) / float64(PopLines)))
-	l.Y = int32(float64(l.Bubble.Y) + (float64(l.Bubble.Radius) + l.PopDistanceReturn) * math.Sin(2.0 * math.Pi * float64(l.Index) / float64(PopLines)))
+	l.X = int32(float64(l.Bubble.X) + (float64(l.Bubble.Radius)+l.PopDistanceReturn)*math.Cos(2.0*math.Pi*float64(l.Index)/float64(PopLines)))
+	l.Y = int32(float64(l.Bubble.Y) + (float64(l.Bubble.Radius)+l.PopDistanceReturn)*math.Sin(2.0*math.Pi*float64(l.Index)/float64(PopLines)))
 	l.LineLength = int32(float64(l.Bubble.Radius) * l.PopDistance)
 }
 
@@ -58,7 +59,7 @@ func (l *Line) Render(renderer *sdl.Renderer) {
 	}
 	renderer.DrawLine(
 		l.X, l.Y,
-		l.X + endx,
-		l.Y + endy,
+		l.X+endx,
+		l.Y+endy,
 	)
 }

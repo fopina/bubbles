@@ -1,15 +1,16 @@
 package cmd
 
 import (
+	"flag"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"sync"
-	"flag"
-	"io/ioutil"
-	"github.com/veandco/go-sdl2/sdl"
-	"github.com/veandco/go-sdl2/mix"
-	"github.com/fopina/bubbles/internal/bubbles"
+
 	"github.com/fopina/bubbles/data"
+	"github.com/fopina/bubbles/internal/bubbles"
+	"github.com/veandco/go-sdl2/mix"
+	"github.com/veandco/go-sdl2/sdl"
 )
 
 func loadChunk(filename string) (*mix.Chunk, error) {
@@ -25,7 +26,6 @@ func loadChunk(filename string) (*mix.Chunk, error) {
 	}
 	return chunk, nil
 }
-
 
 func run(windowWidth, windowHeight int32, fullscreen bool) int {
 	var window *sdl.Window
@@ -78,10 +78,10 @@ func run(windowWidth, windowHeight int32, fullscreen bool) int {
 	defer pops[3].Free()
 
 	sdl.Do(func() {
-		
+
 		window, err = sdl.CreateWindow(
 			WindowTitle,
-			sdl.WINDOWPOS_UNDEFINED,sdl.WINDOWPOS_UNDEFINED,
+			sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
 			windowWidth, windowHeight,
 			sdl.WINDOW_OPENGL,
 		)
@@ -129,22 +129,22 @@ func run(windowWidth, windowHeight int32, fullscreen bool) int {
 			renderer.FillRect(&sdl.Rect{0, 0, windowWidth, windowHeight})
 			for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 				switch event.(type) {
-					case *sdl.KeyboardEvent:
-						ev2, _ := event.(*sdl.KeyboardEvent)
-						if ev2.Keysym.Sym == 27 || ev2.Keysym.Sym == 113 {
-							runningMutex.Lock()
-							running = false
-							runningMutex.Unlock()
-						}
-					case *sdl.MouseMotionEvent:
-						ev2, _ := event.(*sdl.MouseMotionEvent)
-						mousePos.X = ev2.X
-						mousePos.Y = ev2.Y
-					case *sdl.QuitEvent:
+				case *sdl.KeyboardEvent:
+					ev2, _ := event.(*sdl.KeyboardEvent)
+					if ev2.Keysym.Sym == 27 || ev2.Keysym.Sym == 113 {
 						runningMutex.Lock()
 						running = false
 						runningMutex.Unlock()
 					}
+				case *sdl.MouseMotionEvent:
+					ev2, _ := event.(*sdl.MouseMotionEvent)
+					mousePos.X = ev2.X
+					mousePos.Y = ev2.Y
+				case *sdl.QuitEvent:
+					runningMutex.Lock()
+					running = false
+					runningMutex.Unlock()
+				}
 			}
 		})
 
@@ -174,11 +174,11 @@ func Run() {
 	var height, width int
 	var fullscreen bool
 	flag.IntVar(&width, "width", WindowWidth, "window width")
-    flag.IntVar(&width, "w", WindowWidth, "window width")
+	flag.IntVar(&width, "w", WindowWidth, "window width")
 	flag.IntVar(&height, "height", WindowHeight, "window height")
-    flag.IntVar(&height, "hh", WindowHeight, "window height")
-    flag.BoolVar(&fullscreen, "fullscreen", false, "use fullscreen mode")
-    flag.BoolVar(&fullscreen, "fs", false, "use fullscreen mode")
+	flag.IntVar(&height, "hh", WindowHeight, "window height")
+	flag.BoolVar(&fullscreen, "fullscreen", false, "use fullscreen mode")
+	flag.BoolVar(&fullscreen, "fs", false, "use fullscreen mode")
 
 	flag.Parse()
 
